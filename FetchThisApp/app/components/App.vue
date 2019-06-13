@@ -1,15 +1,14 @@
 <template>
-  <Page>
+  <Page class="page">
     <ActionBar>
       <FlexboxLayout justifyContent="space-between" flexDirection="row" width="100%">
-        <Label class="fas"
-               width="10%"
-               :text="'fa-bars' | fonticon"
-               @tap="$refs.drawer.nativeView.showDrawer()"/>
+        <Label class="fas nav-icon"
+              width="10%"
+              :text="'fa-bars' | fonticon"
+              @tap="$refs.drawer.nativeView.showDrawer()"/>
 
         <Label class="title" width="75%" text="Fetch This!" />
-
-        <Label class="fas" width="10%" :text="'fa-shopping-basket' | fonticon"/>
+        <Label class="fas nav-icon" width="10%" :text="'fa-shopping-basket' | fonticon"/>
       </FlexboxLayout>
     </ActionBar>
 
@@ -18,53 +17,41 @@
         <Label class="drawer-header" text="Need More Actions?"/>
 
         <Label class="drawer-item" text="View Completed Lists"/>
-        <Label class="drawer-item" text="Invite people"/>
+        <Label class="drawer-item" text="Invite people" @tap="navigateToPage" pageName="Dummy" />
       </StackLayout>
 
-      <ScrollView ~mainContent>
-        <StackLayout class="home-panel">
-          <TextField v-model="textFieldValue" hint="Enter text..." />
-          <Button text="Add Item" @tap="onButtonTap" />
-
-          <ListView class="list-group" for="item in items" style="height:1250px">
-            <v-template>
-              <FlexboxLayout justifyContent="space-between" flexDirection="row" width="100%">
-                <CheckBox :checked="item.checked" :text="item.text" class="list-group-item-heading" width="90%"></CheckBox>
-                <Label class="fas" width="10%" :text="'fa-trash' | fonticon" :item="item" @tap="removeItemFromList" />
-              </FlexboxLayout>
-            </v-template>
-          </ListView>
-        </StackLayout>
-      </ScrollView>
+      <StackLayout ~mainContent class="home-panel">
+        <Frame ref="mainContentFrame" @pageChange="onPageChange" @navigationRequest="onNavigationRequest" />
+      </StackLayout> 
     </RadSideDrawer>
   </Page>
 </template>
 
-<script lang="ts">
+<script lang="ts">;
+  import EditList from './EditList.vue';
+  import Dummy from './Dummy.vue';
+
   export default {
     data() {
       return {
-        items: [],
-        textFieldValue: ''
+        componentsMap: {
+          EditList, Dummy
+        }
       }
     },
 
-    methods: {
-      onButtonTap() {
-        if (this.textFieldValue &&!this.items.includes(this.textFieldValue)) {
-          this.items.push({
-            text: this.textFieldValue,
-            checked: false
-          });
-          this.textFieldValue = '';
-        }
-      },
-      removeItemFromList(args) {
-        const index = this.items.findIndex((item) => {
-          return item === args.object.item;
-        });
+    components: {
+      EditList, Dummy
+    },
 
-        this.items.splice(index, 1);
+     mounted() {
+      this.$navigateTo(EditList, { frame: this.$refs.mainContentFrame });
+    },
+
+    methods: {
+      navigateToPage(args) {
+        this.$navigateTo(this.componentsMap[args.object.pageName], { frame: this.$refs.mainContentFrame });
+        this.$refs.drawer.nativeView.closeDrawer();
       }
     }
   }
@@ -88,15 +75,21 @@
       padding-top: 10;
     }
 
-    .list-group {
-      margin: 5 0;
+    .list-group-item {
+      margin: 10 5 5 5;
+      padding: 10;
+    }
+
+    .list-group-item .list-action {
+      position: relative;
+      top: 2;
     }
 
     .message {
-        vertical-align: center;
-        text-align: center;
-        font-size: 20;
-        color: #333333;
+      vertical-align: center;
+      text-align: center;
+      font-size: 20;
+      color: #333333;
     }
 
     .drawer-wrapper {
@@ -104,20 +97,20 @@
     }
 
     .drawer-header {
-        padding: 20 16 16 16;
-        margin-bottom: 16;
-        background-color: #6C698D;
-        color: #ffffff;
-        font-size: 24;
+      padding: 20 16 16 16;
+      margin-bottom: 16;
+      background-color: #6C698D;
+      color: #ffffff;
+      font-size: 24;
     }
 
     .drawer-item {
-        padding: 8 16;
-        color: #333333;
-        font-size: 16;
+      padding: 8 16;
+      color: #333333;
+      font-size: 16;
     }
 
-    FlexboxLayout .fas {
+    .nav-icon {
       position: relative;
       top: 2;
       font-size: 30;
