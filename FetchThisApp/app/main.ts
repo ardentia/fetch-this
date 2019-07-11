@@ -26,5 +26,10 @@ Vue.registerElement(
 
 new Vue({
   store,
+  computed: {
+    shoppingItems() {
+      return this.$store.state.shoppingItems
+    }
+  },
   render: h => h('frame', [h(App)])
 }).$start();
