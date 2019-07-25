@@ -21,7 +21,7 @@
       </StackLayout>
 
       <StackLayout ~mainContent class="home-panel">
-        <Frame ref="mainContentFrame" @pageChange="onPageChange" @navigationRequest="onNavigationRequest" />
+        <Frame ref="mainContentFrame" @navigationRequest="onNavigationRequest" />
       </StackLayout> 
     </RadSideDrawer>
   </Page>

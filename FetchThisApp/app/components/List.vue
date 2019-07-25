@@ -36,6 +36,8 @@
 
     methods: {
       removeItemFromList(args) {
+        const itemIndex = this.$props.items.indexOf(args.object.item);
+        this.$emit('item-remove', itemIndex);
         // const index = this.items.findIndex((item) => {
         //   return item === args.object.item;
         // });

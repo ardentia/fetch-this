@@ -3,20 +3,28 @@
     <StackLayout>
       <TextField v-model="textFieldValue" hint="Enter text..." />
       <Button text="Add Item" @tap="onButtonTap" />
-      <List :items="items"></List>
+      <List :items="items" @item-remove="onItemRemove"></List>
     </StackLayout>
   </Page>
 </template>
 
 <script lang="ts">
   import List from '../components/List.vue';
+  import store from '../store';
+
   export default {
     data() {
       return {
         textFieldValue: '',
-        items: []
+        items: store.state.shoppingItems
       }
     },
+
+    // computed: {
+    //   items() {
+    //     return store.state.shoppingItems;
+    //   }
+    // },
 
     components: {
       List
@@ -24,14 +32,24 @@
 
     methods: {
       onButtonTap() {
-        if (this.textFieldValue &&!this.items.includes(this.textFieldValue)) {
-          this.items.push({
-            text: this.textFieldValue,
-            checked: false
-          });
+        const itemAlreadyExists = this.items.some((item) => {
+          return item.text === this.textFieldValue;
+        });
 
-          this.textFieldValue = '';
+        if (!this.textFieldValue || itemAlreadyExists) {
+          return;
         }
+
+        const newItem = {
+          text: this.textFieldValue,
+          checked: false
+        };
+
+        store.commit('addShoppingItem', { item: newItem });
+        this.textFieldValue = '';
+      },
+      onItemRemove(ev) {
+        console.log(ev);
       }
     }
   }
