@@ -14,43 +14,66 @@
 
     <RadSideDrawer ref="drawer">
       <StackLayout ~drawerContent class="drawer-wrapper">
-        <Label class="drawer-header" text="Need More Actions?"/>
-
-        <Label class="drawer-item" text="View Completed Lists"/>
-        <Label class="drawer-item" text="Invite people" @tap="navigateToPage" pageName="Dummy" />
+        <Label v-if="currentList"
+               class="drawer-item"
+               text="Edit List Name"
+               @tap="navigateToPage"
+               pageName="CreateShoppingList"
+               :routeProps="{isInEditMode: true}"/>
+        <Label v-if="currentList"
+               class="drawer-item"
+               text="Add Shopping Items"
+               @tap="navigateToPage"
+               pageName="EditList"/>
+        <Label v-if="!currentList"
+               class="drawer-item"
+               text="Create New List"
+               @tap="navigateToPage"
+               pageName="CreateShoppingList"/>
       </StackLayout>
 
       <StackLayout ~mainContent class="home-panel">
-        <Frame ref="mainContentFrame" @navigationRequest="onNavigationRequest" />
-      </StackLayout> 
+        <Frame ref="mainContentFrame"/>
+      </StackLayout>
     </RadSideDrawer>
   </Page>
 </template>
 
 <script lang="ts">;
+  import Welcome from './Welcome.vue';
   import EditList from './EditList.vue';
-  import Dummy from './Dummy.vue';
+  import CreateShoppingList from './CreateShoppingList.vue';
+  import store from '../store';
+  import Vue from 'nativescript-vue';
 
   export default {
     data() {
       return {
         componentsMap: {
-          EditList, Dummy
+          EditList, CreateShoppingList, Welcome
         }
       }
     },
 
-    components: {
-      EditList, Dummy
+    computed: {
+      currentList() {
+        return store.getters.currentShoppingList;
+      }
     },
 
-     mounted() {
-      this.$navigateTo(EditList, { frame: this.$refs.mainContentFrame });
+    mounted() {
+      Vue.prototype.$mainFrame = this.$refs.mainContentFrame;
+      this.$navigateTo(Welcome, { frame: this.$refs.mainContentFrame });
     },
 
     methods: {
       navigateToPage(args) {
-        this.$navigateTo(this.componentsMap[args.object.pageName], { frame: this.$refs.mainContentFrame });
+        let routeExtras: any = { frame: this.$refs.mainContentFrame };
+        if (args.object.routeProps) {
+          routeExtras = {...routeExtras, props: { ...args.object.routeProps } };
+        }
+
+        this.$navigateTo(this.componentsMap[args.object.pageName], routeExtras);
         this.$refs.drawer.nativeView.closeDrawer();
       }
     }
@@ -61,11 +84,6 @@
     ActionBar {
         background-color: #6C698D;
         color: #ffffff;
-    }
-
-    .title {
-      text-align: center;
-      font-size: 20;
     }
 
     .home-panel {

@@ -2,54 +2,46 @@
   <Page actionBarHidden="true">
     <StackLayout>
       <TextField v-model="textFieldValue" hint="Enter text..." />
-      <Button text="Add Item" @tap="onButtonTap" />
+      <Button text="Add Item" @tap="addShoppingItem" />
       <List :items="items" @item-remove="onItemRemove"></List>
     </StackLayout>
   </Page>
 </template>
 
 <script lang="ts">
+  import { ShoppingListItem } from '../interfaces/shopping-list-item';
   import List from '../components/List.vue';
   import store from '../store';
 
   export default {
     data() {
       return {
-        textFieldValue: '',
-        items: store.state.shoppingItems
+        textFieldValue: ''
       }
     },
 
-    // computed: {
-    //   items() {
-    //     return store.state.shoppingItems;
-    //   }
-    // },
+    computed: {
+      items() {
+        return store.getters.currentShoppingItems;
+      }
+    },
 
     components: {
       List
     },
 
     methods: {
-      onButtonTap() {
-        const itemAlreadyExists = this.items.some((item) => {
-          return item.text === this.textFieldValue;
-        });
-
-        if (!this.textFieldValue || itemAlreadyExists) {
-          return;
-        }
-
-        const newItem = {
+      addShoppingItem() {
+        const newItem: ShoppingListItem = {
           text: this.textFieldValue,
           checked: false
         };
 
-        store.commit('addShoppingItem', { item: newItem });
+        store.commit('addShoppingItem', newItem);
         this.textFieldValue = '';
       },
-      onItemRemove(ev) {
-        console.log(ev);
+      onItemRemove(index: number) {
+        store.commit('removeShoppingItem', index);
       }
     }
   }

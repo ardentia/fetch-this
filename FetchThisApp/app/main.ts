@@ -21,15 +21,10 @@ Vue.registerElement(
 
 Vue.registerElement(
   'CheckBox',
-  () => require('nativescript-checkbox').CheckBox
+  () => require('@nstudio/nativescript-checkbox').CheckBox
 );
 
 new Vue({
   store,
-  computed: {
-    shoppingItems() {
-      return this.$store.state.shoppingItems
-    }
-  },
   render: h => h('frame', [h(App)])
 }).$start();

@@ -3,6 +3,7 @@ const { join, relative, resolve, sep } = require("path");
 const webpack = require("webpack");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const TerserPlugin = require("terser-webpack-plugin");
 
@@ -31,6 +32,7 @@ module.exports = env => {
 
     // Default destination inside platforms/<platform>/...
     const dist = resolve(projectRoot, nsWebpack.getAppPath(platform, projectRoot));
+    const appResourcesPlatformDir = platform === "android" ? "Android" : "iOS";
 
     const {
         // The 'appPath' and 'appResourcesPath' values are fetched from
@@ -61,9 +63,8 @@ module.exports = env => {
     const entryModule = nsWebpack.getEntryModule(appFullPath, platform);
     const entryPath = `.${sep}${entryModule}`;
     const entries = { bundle: entryPath };
-    const areCoreModulesExternal = Array.isArray(env.externals) && env.externals.some(e => e.indexOf("tns-core-modules") > -1);
-    if (platform === "ios" && !areCoreModulesExternal) {
-        entries["tns_modules/tns-core-modules/inspector_modules"] = "inspector_modules";
+    if (platform === "ios") {
+        entries["tns_modules/tns-core-modules/inspector_modules"] = "inspector_modules.js";
     };
     console.log(`Bundling application for entryPath ${entryPath}...`);
 
@@ -74,8 +75,7 @@ module.exports = env => {
         itemsToClean.push(`${join(projectRoot, "platforms", "android", "app", "src", "main", "assets", "snapshots")}`);
         itemsToClean.push(`${join(projectRoot, "platforms", "android", "app", "build", "configurations", "nativescript-android-snapshot")}`);
     }
-
-    nsWebpack.processAppComponents(appComponents, platform);
+    
     const config = {
         mode: mode,
         context: appFullPath,
@@ -186,7 +186,6 @@ module.exports = env => {
                             unitTesting,
                             appFullPath,
                             projectRoot,
-                            ignoredFiles: nsWebpack.getUserDefinedEntries(entries, platform)
                         },
                     },
                 ].filter(loader => Boolean(loader)),
@@ -239,8 +238,7 @@ module.exports = env => {
             // Define useful constants like TNS_WEBPACK
             new webpack.DefinePlugin({
                 "global.TNS_WEBPACK": "true",
-                "TNS_ENV": JSON.stringify(mode),
-                "process": "global.process"
+                "TNS_ENV": JSON.stringify(mode)
             }),
             // Remove all files from the out dir.
             new CleanWebpackPlugin(itemsToClean, { verbose: !!verbose }),
@@ -259,7 +257,10 @@ module.exports = env => {
                 platforms,
             }),
             // Does IPC communication with the {N} CLI to notify events when running in watch mode.
-            new nsWebpack.WatchStateLoggerPlugin()
+            new nsWebpack.WatchStateLoggerPlugin(),
+            new ExtraWatchWebpackPlugin({
+                files: [`node_modules/**/*.${platform}.ts`, `node_modules/**/*.${platform}.js`]
+            })
         ],
     };
 

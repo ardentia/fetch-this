@@ -9,10 +9,10 @@
           </CheckBox>
 
           <Label class="fas list-action"
-                  :text="'fa-trash' | fonticon"
-                  :item="item"
-                  row="0" col="1"
-                  @tap="removeItemFromList" />
+                 :text="'fa-trash' | fonticon"
+                 :item="item"
+                 row="0" col="1"
+                @tap="removeItemFromList" />
         </GridLayout>
       </v-template>
     </ListView>
@@ -28,21 +28,10 @@
       }
     },
 
-    data() {
-      return {
-        listItems: this.$props.items
-      }
-    },
-
     methods: {
       removeItemFromList(args) {
         const itemIndex = this.$props.items.indexOf(args.object.item);
         this.$emit('item-remove', itemIndex);
-        // const index = this.items.findIndex((item) => {
-        //   return item === args.object.item;
-        // });
-
-        // this.items.splice(index, 1);
       }
     }
   }
