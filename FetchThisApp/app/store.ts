@@ -60,6 +60,15 @@ export default new Vuex.Store({
         });
 
       listToEdit = { ...shoppingList };
+    },
+    markCurrentListAsCompleted(state) {
+      const currentList: ShoppingList = state.shoppingLists.find((list: ShoppingList) => {
+        return !list.isCompleted;
+      });
+
+      if (currentList) {
+        currentList.isCompleted = true;
+      }
     }
   },
   actions: {

@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout>
-      <TextField v-model="textFieldValue" hint="Enter text..." />
+      <TextField v-model="textFieldValue" hint="Enter item name (e.g: eggs)" />
       <Button text="Add Item" @tap="addShoppingItem" />
       <List :items="items" @item-remove="onItemRemove"></List>
     </StackLayout>

@@ -1,7 +1,6 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout>
-      <Label class="title" :text="title" />
       <TextField v-model="listName" hint="List Name" />
       <Button :text="buttonLabel" @tap="addList" />
     </StackLayout>
@@ -10,7 +9,7 @@
 
 <script lang="ts">
   import store from '../store';
-  import EditList from './EditList.vue';
+  import EditShoppingItems from './EditShoppingItems.vue';
   import { ShoppingList } from '../interfaces/shopping-list';
 
   export default {
@@ -28,9 +27,6 @@
     },
 
     computed: {
-      title() {
-        return this.$props.isInEditMode ? 'Edit Active Shopping List' : 'Create New Shopping List';
-      },
       buttonLabel() {
         return this.$props.isInEditMode ? 'Edit List' : 'Add List';
       }
@@ -63,7 +59,7 @@
           this.createList();
         }
 
-        this.$navigateTo(EditList, { frame: this.$mainFrame });
+        this.$navigateTo(EditShoppingItems, { frame: this.$mainFrame });
       }
     }
   }
