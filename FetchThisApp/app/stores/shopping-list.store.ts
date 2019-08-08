@@ -1,23 +1,20 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
 import * as http from 'http';
-import deepCopy from './utils/deepCopy';
-import { ShoppingListItem } from './interfaces/shopping-list-item';
-import { ShoppingList } from './interfaces/shopping-list';
+import { ShoppingListItem } from '../interfaces/shopping-list-item';
+import { ShoppingList } from '../interfaces/shopping-list';
+import getItemCopy from '@ardentia/deep-copy';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default {
+  namespaced: true,
   state: {
     shoppingItems: Array<ShoppingListItem>(),
     shoppingLists: Array<ShoppingList>()
   },
   getters: {
     currentShoppingItems(state) {
-      return deepCopy(state.shoppingItems);
+      return getItemCopy(state.shoppingItems);
     },
     shoppingLists(state) {
-      return deepCopy(state.shoppingLists);
+      return getItemCopy(state.shoppingLists);
     },
     currentShoppingList(state) {
       return state.shoppingLists.find((list: ShoppingList) => {
@@ -74,4 +71,4 @@ export default new Vuex.Store({
   actions: {
 
   }
-});
+};

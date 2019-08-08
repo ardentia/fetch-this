@@ -1,7 +1,7 @@
 import Vue from 'nativescript-vue';
 import App from './components/App.vue';
-import store from './store';
 import { TNSFontIcon, fonticon } from 'nativescript-fonticon';
+import store from './stores/store';
 
 TNSFontIcon.debug = true;
 TNSFontIcon.paths = {

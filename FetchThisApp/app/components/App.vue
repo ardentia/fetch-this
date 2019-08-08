@@ -83,7 +83,7 @@
 
     computed: {
       currentList() {
-        return store.getters.currentShoppingList;
+        return store..getters.currentShoppingList;
       },
       currentShoppingListItems() {
         return store.getters.currentShoppingItems;
