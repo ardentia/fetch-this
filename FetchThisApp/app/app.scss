@@ -4,7 +4,7 @@
 
 // Override variables here
 
-@import '~nativescript-theme-core/scss/index';
+// @import '~nativescript-theme-core/scss/index';
 
 .fas {
   font-family: 'Font Awesome 5 Free', fa-solid-900;
@@ -20,8 +20,12 @@
 }
 
 ActionBar {
-  background-color: #6C698D;
+  background-color: #9086c9;
   color: #ffffff;
+}
+
+Button {
+  background-color: #b2e2f5;
 }
 
 // Global SCSS styling

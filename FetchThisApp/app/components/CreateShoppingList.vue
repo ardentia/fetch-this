@@ -1,12 +1,17 @@
 <template>
   <Page actionBarHidden="true">
-    <StackLayout>
+    <StackLayout class="form">
       <Image src="~/assets/images/mirage-list-is-empty.png"
              horizontalAlignment="center"
              stretch="none"
              class="pb-2"/>
-      <TextField v-model="listName" hint="List Name" />
-      <Button :text="buttonLabel" @tap="addList" />
+
+      <StackLayout class="input-field">
+        <TextField v-model="listName" class="input" hint="Option 2" />
+        <StackLayout class="hr-light"></StackLayout>
+      </StackLayout>
+
+      <Button :text="buttonLabel" class="btn btn-primary" @tap="addList" />
     </StackLayout>
   </Page>
 </template>

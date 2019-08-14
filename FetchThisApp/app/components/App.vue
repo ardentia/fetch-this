@@ -19,12 +19,15 @@
     </ActionBar>
 
     <RadSideDrawer ref="drawer">
-      <StackLayout ~drawerContent class="drawer-wrapper">
-      <Label v-if="!currentList"
+      <StackLayout ~drawerContent class="sidedrawer-content drawer-wrapper">
+        <StackLayout class="sidedrawer-list-item create-list">
+          <Label v-if="!currentList"
              class="drawer-item"
              text="Create New List"
              @tap="navigateToPage"
              pageName="CreateShoppingList" />
+        </StackLayout>
+
       <Label v-if="currentList"
              class="drawer-item"
              text="Edit List Name"
@@ -152,25 +155,30 @@
   }
 
   .drawer-wrapper {
-    background-color: #D4D2D5;
+    background-color: #8dd1ec;
   }
 
   .drawer-header {
     padding: 20 16 16 16;
     margin-bottom: 16;
-    background-color: #6C698D;
+    background-color: #d9c4f5;
     color: #ffffff;
     font-size: 24;
   }
 
-  .drawer-item {
-    background-image: url('~/images/hugo-list-is-empty.png');
+  .create-list {
+    height: 123;
+    background-image: url('~/assets/images/hugo-list-is-empty.png');
     background-repeat: no-repeat;
-    background-position: right;
+    background-position: left;
     background-size: contain;
-    padding: 8 16;
+  }
+
+  .drawer-item {
+    padding-top: 50;
+    padding-left: 80;
     color: #333333;
-    font-size: 16;
+    font-size: 20;
   }
 
   .nav-icon {

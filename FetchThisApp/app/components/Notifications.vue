@@ -7,12 +7,15 @@
              class="pb-2"/>
       <Button text="I updated the list!"
               @tap="sendNotification"
+              class="btn btn-primary btn-rounded-sm"
               :notificationType="notificationType.ListUpdated" />
       <Button text="I'm going shopping!"
               @tap="sendNotification"
+              class="btn btn-primary btn-rounded-sm"
               :notificationType="notificationType.GoingShopping" />
       <Button text="Shopping done!"
               @tap="sendNotification"
+              class="btn btn-primary btn-rounded-sm"
               :notificationType="notificationType.ShoppingDone" />
     </StackLayout>
   </Page>
