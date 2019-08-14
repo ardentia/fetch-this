@@ -1,5 +1,5 @@
 <template>
-  <Page class="page" @navigatingTo="onNavigate">
+  <Page class="page">
     <ActionBar>
       <FlexboxLayout justifyContent="space-between" flexDirection="row" width="100%">
         <Label class="fas nav-icon"
@@ -21,21 +21,21 @@
     <RadSideDrawer ref="drawer">
       <StackLayout ~drawerContent class="drawer-wrapper">
       <Label v-if="!currentList"
-              class="drawer-item"
-              text="Create New List"
-              @tap="navigateToPage"
-              pageName="CreateShoppingList" />
-        <Label v-if="currentList"
-               class="drawer-item"
-               text="Edit List Name"
-               @tap="navigateToPage"
-               pageName="CreateShoppingList"
-               :routeProps="{isInEditMode: true}" />
-        <Label v-if="currentList"
-               class="drawer-item"
-               text="Manage Shopping Items"
-               @tap="navigateToPage"
-               pageName="EditShoppingItems" />
+             class="drawer-item"
+             text="Create New List"
+             @tap="navigateToPage"
+             pageName="CreateShoppingList" />
+      <Label v-if="currentList"
+             class="drawer-item"
+             text="Edit List Name"
+             @tap="navigateToPage"
+             pageName="CreateShoppingList"
+             :routeProps="{isInEditMode: true}" />
+      <Label v-if="currentList"
+             class="drawer-item"
+             text="Manage Shopping Items"
+             @tap="navigateToPage"
+             pageName="EditShoppingItems" />
       </StackLayout>
 
       <StackLayout ~mainContent class="home-panel">
@@ -53,7 +53,6 @@
   import EditShoppingItems from './EditShoppingItems.vue';
   import CreateShoppingList from './CreateShoppingList.vue';
   import Notifications from './Notifications.vue';
-  import store from '../store';
 
   export default {
     data() {
@@ -76,24 +75,26 @@
             title: 'Notify',
             component: Notifications
           }
-        },
-        pageTitle: ''
+        }
       }
     },
 
     computed: {
       currentList() {
-        return store..getters.currentShoppingList;
+        return this.$store.getters['shoppingList/currentShoppingList'];
       },
       currentShoppingListItems() {
-        return store.getters.currentShoppingItems;
+        return this.$store.getters['shoppingList/currentShoppingItems']
+      },
+      pageTitle() {
+        return this.$store.state.appSession.viewTitle;
       }
     },
 
     mounted() {
       Vue.prototype.$mainFrame = this.$refs.mainContentFrame;
       this.$navigateTo(Welcome, { frame: this.$refs.mainContentFrame });
-      this.pageTitle = this.componentsMap.Welcome.title;
+      this.$store.commit('appSession/changeViewTitle', this.componentsMap.Welcome.title);
     },
 
     methods: {
@@ -107,24 +108,19 @@
           }
         };
 
-        this.pageTitle = componentToDisplay.title;
+        let viewTitle = componentToDisplay.title;
 
         if (routeProps) {
           routeExtras = { ...routeExtras, props: { ...routeProps } };
 
           if (routeProps.isInEditMode) {
-            this.pageTitle = componentToDisplay.editTitle;
+           viewTitle = componentToDisplay.editTitle;
           }
         }
 
+        this.$store.commit('appSession/changeViewTitle', viewTitle);
         this.$navigateTo(componentToDisplay.component, routeExtras);
         this.$refs.drawer.nativeView.closeDrawer();
-      },
-      onNavigate(args: NavigatedData) {
-        const rootFrame = this.$refs.mainContentFrame;
-         const page = <Page>rootFrame.currentPage;
-         console.log(page);
-        //this.pageTitle = this.componentsMap[args.object].title;
       }
     }
   }
@@ -168,6 +164,10 @@
   }
 
   .drawer-item {
+    background-image: url('~/images/hugo-list-is-empty.png');
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: contain;
     padding: 8 16;
     color: #333333;
     font-size: 16;

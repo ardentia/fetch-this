@@ -11,7 +11,6 @@
 <script lang="ts">
   import { ShoppingListItem } from '../interfaces/shopping-list-item';
   import List from '../components/List.vue';
-  import store from '../store';
 
   export default {
     data() {
@@ -22,7 +21,7 @@
 
     computed: {
       items() {
-        return store.getters.currentShoppingItems;
+        return this.$store.getters['shoppingList/currentShoppingItems'];
       }
     },
 
@@ -37,11 +36,11 @@
           checked: false
         };
 
-        store.commit('addShoppingItem', newItem);
+        this.$store.commit('shoppingList/addShoppingItem', newItem);
         this.textFieldValue = '';
       },
       onItemRemove(index: number) {
-        store.commit('removeShoppingItem', index);
+        this.$store.commit('shoppingList/removeShoppingItem', index);
       }
     }
   }
