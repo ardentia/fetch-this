@@ -20,25 +20,34 @@
 
     <RadSideDrawer ref="drawer">
       <StackLayout ~drawerContent class="sidedrawer-content drawer-wrapper">
-        <StackLayout class="sidedrawer-list-item create-list">
-          <Label v-if="!currentList"
-             class="drawer-item"
-             text="Create New List"
-             @tap="navigateToPage"
-             pageName="CreateShoppingList" />
+        <StackLayout class="sidedrawer-list-item" v-if="!currentList">
+          <Image src="~/assets/images/buttons/create-list.png" 
+                 stretch="aspectFit"
+                 loadMode="async"
+                 class="drawer-item"
+                 text="Create New List"
+                 @tap="navigateToPage"
+                 pageName="CreateShoppingList" />
         </StackLayout>
 
-      <Label v-if="currentList"
-             class="drawer-item"
-             text="Edit List Name"
-             @tap="navigateToPage"
-             pageName="CreateShoppingList"
-             :routeProps="{isInEditMode: true}" />
-      <Label v-if="currentList"
-             class="drawer-item"
-             text="Manage Shopping Items"
-             @tap="navigateToPage"
-             pageName="EditShoppingItems" />
+        <StackLayout class="sidedrawer-list-item" v-if="currentList">
+          <Image src="~/assets/images/buttons/edit-list-name.png" 
+                 stretch="aspectFit"
+                 loadMode="async"
+                 class="drawer-item"
+                 @tap="navigateToPage"
+                 pageName="CreateShoppingList"
+                 :routeProps="{isInEditMode: true}" />
+        </StackLayout>
+
+        <StackLayout class="sidedrawer-list-item" v-if="currentList">
+          <Image src="~/assets/images/buttons/shopping-items.png"
+                 stretch="aspectFit"
+                 loadMode="async"
+                 class="drawer-item"
+                 @tap="navigateToPage"
+                 pageName="EditShoppingItems" />
+        </StackLayout>
       </StackLayout>
 
       <StackLayout ~mainContent class="home-panel">
@@ -50,8 +59,9 @@
 
 <script lang="ts">
   import Vue from 'nativescript-vue';
-  import { Page, NavigatedData } from "tns-core-modules/ui/page";
-  import { getFrameById } from "tns-core-modules/ui/frame";
+  import { Page, NavigatedData } from 'tns-core-modules/ui/page';
+  import { getFrameById } from 'tns-core-modules/ui/frame';
+  import { ComponentMetadata } from '../interfaces/component-metadata';
   import Welcome from './Welcome.vue';
   import EditShoppingItems from './EditShoppingItems.vue';
   import CreateShoppingList from './CreateShoppingList.vue';
@@ -91,6 +101,9 @@
       },
       pageTitle() {
         return this.$store.state.appSession.viewTitle;
+      },
+      currentView() {
+        return this.$store.getters['appSession/getCurrentView'];
       }
     },
 
@@ -98,12 +111,18 @@
       Vue.prototype.$mainFrame = this.$refs.mainContentFrame;
       this.$navigateTo(Welcome, { frame: this.$refs.mainContentFrame });
       this.$store.commit('appSession/changeViewTitle', this.componentsMap.Welcome.title);
+      this.$store.commit('appSession/setCurrentView', this.componentsMap.Welcome.component);
     },
 
     methods: {
       navigateToPage(args) {
         const routeProps = args.object.routeProps;
-        const componentToDisplay = this.componentsMap[args.object.pageName];
+        const componentToDisplay: ComponentMetadata = this.componentsMap[args.object.pageName];
+
+        if (Object.is(componentToDisplay, this.currentView)) {
+          return;
+        }
+
         let routeExtras: any = {
           frame: this.$refs.mainContentFrame,
           transition: {
@@ -122,6 +141,7 @@
         }
 
         this.$store.commit('appSession/changeViewTitle', viewTitle);
+        this.$store.commit('appSession/setCurrentView', componentToDisplay);
         this.$navigateTo(componentToDisplay.component, routeExtras);
         this.$refs.drawer.nativeView.closeDrawer();
       }
@@ -155,7 +175,7 @@
   }
 
   .drawer-wrapper {
-    background-color: #8dd1ec;
+    background-color: #bbd9e6;
   }
 
   .drawer-header {
@@ -164,14 +184,6 @@
     background-color: #d9c4f5;
     color: #ffffff;
     font-size: 24;
-  }
-
-  .create-list {
-    height: 123;
-    background-image: url('~/assets/images/hugo-list-is-empty.png');
-    background-repeat: no-repeat;
-    background-position: left;
-    background-size: contain;
   }
 
   .drawer-item {
@@ -185,5 +197,11 @@
     position: relative;
     top: 2;
     font-size: 30;
+  }
+
+  .sidedrawer-list-item {
+    width: 220;
+    height: 120;
+    margin-top: 10;
   }
 </style>

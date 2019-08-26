@@ -66,6 +66,13 @@ export default {
       if (currentList) {
         currentList.isCompleted = true;
       }
+    },
+    lockCurrentList(state) {
+      const currentList: ShoppingList = state.shoppingLists.find((list: ShoppingList) => {
+        return !list.isCompleted;
+      });
+
+      currentList.isLocked = true;
     }
   },
   actions: {

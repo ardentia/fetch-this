@@ -5,4 +5,5 @@ export interface ShoppingList {
   dateCreated: number;
   items: ShoppingListItem[];
   isCompleted: boolean;
+  isLocked: boolean;
 }

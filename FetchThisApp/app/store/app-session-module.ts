@@ -2,10 +2,13 @@ export default {
   namespaced: true,
   state: {
     viewTitle: '',
-    previousViewTitle: ''
+    previousViewTitle: '',
+    currentView: null
   },
   getters: {
-    
+    getCurrentView(state) {
+      return state.currentView;
+    }
   },
   mutations: {
     changeViewTitle(state, title: string) {
@@ -14,6 +17,9 @@ export default {
     },
     setPreviousViewTitle(state) {
       state.viewTitle = state.previousViewTitle;
+    },
+    setCurrentView(state, newView) {
+      state.currentView = newView;
     }
   }
 };

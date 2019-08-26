@@ -9,6 +9,7 @@
           </CheckBox>
 
           <Label class="fas list-action"
+                 v-if="!currentList.isLocked"
                  :text="'fa-trash' | fonticon"
                  :item="item"
                  row="0" col="1"
@@ -21,6 +22,12 @@
 
 <script lang="ts">
   export default {
+    computed: {
+      currentList() {
+        return this.$store.getters['shoppingList/currentShoppingList'];
+      }
+    },
+
     props: {
       items: {
         type: Array,

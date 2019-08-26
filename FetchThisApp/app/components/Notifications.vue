@@ -24,7 +24,7 @@
 <script lang="ts">;
   import Vue from 'nativescript-vue';
   import { NotificationType } from '../enums/notification-type';
-  import { SwipeGestureEventData, SwipeDirection } from "tns-core-modules/ui/gestures";
+  import { SwipeGestureEventData, SwipeDirection } from 'tns-core-modules/ui/gestures';
 
   export default {
     data() {
@@ -37,11 +37,20 @@
       sendNotification(args) {
         const notificationType = args.object.notificationType;
 
-        if (args.object.notificationType === NotificationType.ShoppingDone) {
-          this.$store.commit('currentShoppingItems/markCurrentListAsCompleted');
+        switch (notificationType) {
+          case NotificationType.ShoppingDone:
+            this.$store.commit('currentShoppingItems/markCurrentListAsCompleted');
+            // TODO: http request here
+            break;
+          case NotificationType.GoingShopping:
+            this.$store.commit('currentShoppingItems/lockCurrentList');
+            // TODO: http request here
+            break;
+          case NotificationType.ListUpdated:
+            // TODO: http request here
+            break;
         }
         
-        // TODO: http request here
       },
       swipe(args: SwipeGestureEventData) {
         if (args.direction === SwipeDirection.right) {
