@@ -20,7 +20,7 @@
 
     <RadSideDrawer ref="drawer">
       <StackLayout ~drawerContent class="sidedrawer-content drawer-wrapper">
-        <StackLayout class="sidedrawer-list-item" v-if="!currentList">
+        <StackLayout class="sidedrawer-list-item" v-if="!currentList" marginTop="10">
           <Image src="~/assets/images/buttons/create-list.png" 
                  stretch="aspectFit"
                  loadMode="async"
@@ -30,7 +30,7 @@
                  pageName="CreateShoppingList" />
         </StackLayout>
 
-        <StackLayout class="sidedrawer-list-item" v-if="currentList">
+        <StackLayout class="sidedrawer-list-item" v-if="currentList" marginTop="10">
           <Image src="~/assets/images/buttons/edit-list-name.png" 
                  stretch="aspectFit"
                  loadMode="async"
@@ -40,7 +40,7 @@
                  :routeProps="{isInEditMode: true}" />
         </StackLayout>
 
-        <StackLayout class="sidedrawer-list-item" v-if="currentList">
+        <StackLayout class="sidedrawer-list-item" v-if="currentList" marginTop="-70">
           <Image src="~/assets/images/buttons/shopping-items.png"
                  stretch="aspectFit"
                  loadMode="async"
@@ -200,8 +200,7 @@
   }
 
   .sidedrawer-list-item {
-    width: 220;
-    height: 120;
-    margin-top: 10;
+    width: 240;
+    height: 140;
   }
 </style>
