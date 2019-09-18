@@ -25,7 +25,6 @@
                  stretch="aspectFit"
                  loadMode="async"
                  class="drawer-item"
-                 text="Create New List"
                  @tap="navigateToPage"
                  pageName="CreateShoppingList" />
         </StackLayout>

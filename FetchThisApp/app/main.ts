@@ -26,5 +26,5 @@ Vue.registerElement(
 
 new Vue({
   render: h => h('frame', [h(App)]),
-  store
+  store: store
 }).$start();
